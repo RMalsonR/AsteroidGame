@@ -5,6 +5,8 @@
 
 #include <vector>
 
+// WITH BRAKE LOGIC
+
 std::vector<SpaceObject> vecAsteroids;
 std::vector<SpaceObject> vecBullets;
 SpaceObject player;
