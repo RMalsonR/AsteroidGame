@@ -62,15 +62,13 @@ void act(float dt) {
 
     if (is_key_pressed(VK_LEFT)) {
         player.angle += SHIP_ANGLE_FACTOR * dt;
-        change_player_dx_dy(dt, SHIP_BRAKE_BY_ROTATION_FACTOR, true);
     }
     if (is_key_pressed(VK_RIGHT)) {
         player.angle -= SHIP_ANGLE_FACTOR * dt;
-        change_player_dx_dy(dt, SHIP_BRAKE_BY_ROTATION_FACTOR, true);
     }
 
     if(is_key_pressed(VK_UP)) {
-        change_player_dx_dy(dt, SHIP_SPEED_SCALE_FACTOR, false);
+        change_player_dx_dy(dt, SHIP_SPEED_SCALE_FACTOR);
         isEngineUp = true;
     } else {
         isEngineUp = false;

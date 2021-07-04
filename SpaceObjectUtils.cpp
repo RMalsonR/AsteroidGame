@@ -154,17 +154,7 @@ void calc_space_object_coordinates(SpaceObject& spaceObject, float dt){
 }
 
 
-void change_player_dx_dy(float dt, float speedFactor = SHIP_SPEED_SCALE_FACTOR, bool is_brake = false) {
-    if (is_brake) {
-        if (-MIN_FACTOR_TO_SEE_MOVING <= player.dx && player.dx <= MIN_FACTOR_TO_SEE_MOVING)
-            if (-SHIP_BRAKE_BY_ROTATION_FACTOR <= player.dx && player.dx <= SHIP_BRAKE_BY_ROTATION_FACTOR)
-                player.dx = 0.0f;
-
-        if (-MIN_FACTOR_TO_SEE_MOVING <= player.dy && player.dy <= MIN_FACTOR_TO_SEE_MOVING)
-            if (-SHIP_BRAKE_BY_ROTATION_FACTOR <= player.dy && player.dy <= SHIP_BRAKE_BY_ROTATION_FACTOR)
-                player.dy = 0.0f;
-    }
-
+void change_player_dx_dy(float dt, float speedFactor = SHIP_SPEED_SCALE_FACTOR) {
     player.dx += sin(player.angle) * speedFactor * dt;
     player.dy += -cos(player.angle) * speedFactor * dt;
 

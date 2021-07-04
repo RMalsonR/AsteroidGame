@@ -56,6 +56,6 @@ void calc_space_object_coordinates(std::vector<SpaceObject>& spaceObjects, float
 
 void calc_space_object_coordinates(SpaceObject& spaceObject, float dt);
 
-void change_player_dx_dy(float dt, float speedFactor, bool is_brake);
+void change_player_dx_dy(float dt, float speedFactor);
 
 void add_new_bullet();
