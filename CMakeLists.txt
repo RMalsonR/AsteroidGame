@@ -13,5 +13,5 @@ link_directories(/opt/X11/lib)
 
 set(CMAKE_CONFIGURATION_TYPES "Debug" "Release")
 file(GLOB SRC *.cpp)
-add_executable(game ${SRC} SpaceObject.h)
+add_executable(game ${SRC} SpaceObjectUtils.h SpaceObjectUtils.cpp)
 target_link_libraries(game m X11)
