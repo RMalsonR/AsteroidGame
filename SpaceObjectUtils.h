@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
+#include <cmath>
 #include <vector>
+#include <algorithm>
 
 // Color consts
 #define WHITE_COLOR 4294967295

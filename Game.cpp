@@ -1,9 +1,6 @@
 #include "Engine.h"
 #include "SpaceObjectUtils.h"
-#include <cstdlib>
 #include <memory.h>
-
-#include <vector>
 
 std::vector<SpaceObject> vecAsteroids;
 std::vector<SpaceObject> vecBullets;
@@ -19,16 +16,17 @@ bool isEngineUp = false;
 // initialize game data in this function
 void initialize(){
 
-    vecBullets = {};
-    vecNewAsteroids = {};
+//    vecBullets = {};
+//    vecNewAsteroids = {};
 
-    vecAsteroids.push_back({
-                                   100,
-                                   100,
-                                   LARGEST_ASTEROID_SPEED_FACTOR,
-                                   -LARGEST_ASTEROID_SPEED_FACTOR,
-                                   LARGE_ASTEROID_SIZE,
-                                   0.0f});
+    vecAsteroids.emplace_back(
+            SpaceObject{
+               100,
+               100,
+               LARGEST_ASTEROID_SPEED_FACTOR,
+               -LARGEST_ASTEROID_SPEED_FACTOR,
+               LARGE_ASTEROID_SIZE,
+               0.0f});
 
     player.x = SCREEN_HEIGHT / 2;
     player.y = SCREEN_WIDTH / 2;
@@ -119,7 +117,7 @@ void act(float dt) {
     // Add new asteroids to vecAsteroids pull and clear
     if (!vecNewAsteroids.empty()) {
         for (auto newAsteroid: vecNewAsteroids)
-            vecAsteroids.push_back(newAsteroid);
+            vecAsteroids.emplace_back(newAsteroid);
         vecNewAsteroids.clear();
     }
 

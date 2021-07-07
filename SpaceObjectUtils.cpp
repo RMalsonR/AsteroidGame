@@ -1,7 +1,6 @@
 #include "Engine.h"
 #include "SpaceObjectUtils.h"
 
-#include <vector>
 
 extern SpaceObject player;
 extern std::vector<SpaceObject> vecAsteroids;
@@ -21,17 +20,17 @@ extern bool isEngineUp;
 std::pair<int, int> wrap_coordinates(int currX, int currY){
     int resX = currX, resY = currY;
     if (currX <= 0) {
-        resX += SCREEN_HEIGHT;
+        resX += SCREEN_HEIGHT - 1;
     }
-    if (currX >= SCREEN_HEIGHT){
-        resX -= SCREEN_HEIGHT;
+    if (currX >= SCREEN_HEIGHT - 1){
+        resX -= SCREEN_HEIGHT - 1;
     }
 
     if (currY <= 0) {
-        resY += SCREEN_WIDTH;
+        resY += SCREEN_WIDTH - 1;
     }
-    if (currY >= SCREEN_WIDTH){
-        resY -= SCREEN_WIDTH;
+    if (currY >= SCREEN_WIDTH - 1){
+        resY -= SCREEN_WIDTH - 1;
     }
     return std::make_pair(resX, resY);
 };
@@ -117,7 +116,7 @@ void draw_poly_model(const std::vector<std::pair<int, int>> &vecModelCoord,
 
 
 bool is_object_to_remove(int x, int y){
-    return x < 0 || y < 0 || x > SCREEN_HEIGHT || y > SCREEN_WIDTH;
+    return x < 0 || y < 0 || x > SCREEN_HEIGHT - 1 || y > SCREEN_WIDTH - 1;
 }
 
 
@@ -237,11 +236,12 @@ void change_player_dx_dy(float dt, float speedFactor = SHIP_SPEED_FACTOR, bool i
 
 void add_new_bullet(){
     if (is_valid_time_to_shoot())
-        vecBullets.push_back(
-                {player.x, player.y,
-                 BULLET_SPEED_FACTOR * sinf(player.angle),
-                 -BULLET_SPEED_FACTOR * cosf(player.angle),
-                 BULLET_SIZE });
+        vecBullets.emplace_back(
+                SpaceObject{
+                    player.x, player.y,
+                    BULLET_SPEED_FACTOR * sinf(player.angle),
+                    -BULLET_SPEED_FACTOR * cosf(player.angle),
+                    BULLET_SIZE });
 }
 
 void add_new_asteroid(SpaceObject fromAsteroid){
@@ -261,7 +261,7 @@ void add_new_asteroid(SpaceObject fromAsteroid){
             int newX = fromAsteroid.x, newY = fromAsteroid.y;
             float newDx = LARGEST_ASTEROID_SPEED_FACTOR * newAsteroidSpeedScaleFactor * sinAngle;
             float newDy = LARGEST_ASTEROID_SPEED_FACTOR * newAsteroidSpeedScaleFactor * cosAngle;
-            vecNewAsteroids.push_back({newX, newY, newDx, newDy, newASteroidSize, 0.0f});
+            vecNewAsteroids.emplace_back(SpaceObject{newX, newY, newDx, newDy, newASteroidSize, 0.0f});
         }
     }
 }
