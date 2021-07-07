@@ -7,6 +7,7 @@
 
 std::vector<SpaceObject> vecAsteroids;
 std::vector<SpaceObject> vecBullets;
+std::vector<SpaceObject> vecNewAsteroids;
 SpaceObject player;
 
 std::vector<std::pair<int, int>> vecShipModel;
@@ -18,13 +19,16 @@ bool isEngineUp = false;
 // initialize game data in this function
 void initialize(){
 
+    vecBullets = {};
+    vecNewAsteroids = {};
+
     vecAsteroids.push_back({
-            100,
-            100,
-            100.0f,
-            -100.0f,
-            LARGEST_ASTEROID_SIZE,
-            0.0f});
+                                   100,
+                                   100,
+                                   LARGEST_ASTEROID_SPEED_FACTOR,
+                                   -LARGEST_ASTEROID_SPEED_FACTOR,
+                                   LARGE_ASTEROID_SIZE,
+                                   0.0f});
 
     player.x = SCREEN_HEIGHT / 2;
     player.y = SCREEN_WIDTH / 2;
@@ -47,9 +51,9 @@ void initialize(){
             {1.0f, 1.0f},
     };
 
-    for (int i = 0; i < LARGEST_ASTEROID_EDGES_COUNT; i++){
+    for (int i = 0; i < ASTEROID_EDGES_COUNT; i++){
         float randRadius = (float)random() / (float)RAND_MAX * 2.0f + 4.0f;
-        float angle = ((float) i / (float)LARGEST_ASTEROID_EDGES_COUNT) * ((float)M_PI * 2.0f);
+        float angle = ((float) i / (float)ASTEROID_EDGES_COUNT) * ((float)M_PI * 2.0f);
         int x = (int)(randRadius * sinf(angle));
         int y = (int)(randRadius * cosf(angle));
         vecAsteroidModel.emplace_back(x, y);
@@ -68,9 +72,10 @@ void act(float dt) {
     }
 
     if(is_key_pressed(VK_UP)) {
-        change_player_dx_dy(dt, SHIP_SPEED_SCALE_FACTOR);
+        change_player_dx_dy(dt, SHIP_SPEED_FACTOR, false);
         isEngineUp = true;
     } else {
+        change_player_dx_dy(dt, SHIP_SPEED_BRAKE_FACTOR, true);
         isEngineUp = false;
     }
 
@@ -93,21 +98,33 @@ void act(float dt) {
         bullet.y += (int)(bullet.dy * dt);
 
         for(auto &asteroid : vecAsteroids){
-            if (is_point_inside_circle(asteroid.x, asteroid.y, asteroid.size, bullet.x, bullet.y)){
-                // set x, y coordinate to -10 to remove the object
+            if (is_bullet_inside_polygon(bullet, get_object_points_coordinates(vecAsteroidModel, asteroid.x, asteroid.y, asteroid.angle, asteroid.size))){
+                // set negative x, y BULLET coordinate to remove the object
                 bullet.x = -10;
                 bullet.y = -10;
+
+                // add new asteroids
+                add_new_asteroid(asteroid);
+
+                // set negative x, y ASTEROID coordinate to -10 to remove the object
+                asteroid.x = -10;
+                asteroid.y = -10;
             }
         }
     }
 
     // Remove bullets that out of screen
-    if (!vecBullets.empty()){
-        auto i = remove_if(vecBullets.begin(), vecBullets.end(), [&](SpaceObject spaceObject) {
-            return is_bullet_out_of_screen(spaceObject.x, spaceObject.y);});
-        if(i != vecBullets.end())
-            vecBullets.erase(i);
+    remove_destroyed_objects(vecBullets);
+
+    // Add new asteroids to vecAsteroids pull and clear
+    if (!vecNewAsteroids.empty()) {
+        for (auto newAsteroid: vecNewAsteroids)
+            vecAsteroids.push_back(newAsteroid);
+        vecNewAsteroids.clear();
     }
+
+    // Remove asteroids that out of screen
+    remove_destroyed_objects(vecAsteroids);
 
     if (is_key_pressed(VK_ESCAPE))
         schedule_quit_game();
