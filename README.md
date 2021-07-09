@@ -12,6 +12,15 @@ For linux / macos sytems.
 * libx11-dev 
 * (for macos) see also installing /opt/X11/
 
+**WARNING!**  
+**TO RUN THIS NOT ON MAC OS, DELETE FORWARD STRINGS FROM `CMakeLists.txt`**
+
+```
+10 # for macos  
+11 include_directories(/opt/X11/include)  
+12 link_directories(/opt/X11/lib)  
+```
+
 ___
 
 ## TODO List
